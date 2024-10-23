@@ -4,8 +4,6 @@ const taskInput = document.querySelector("#new-task-input");
 const dateInput = document.querySelector("#due-date");
 const taskSection = document.querySelector(".tasks");
 
-//array of tasks
-const listOfTasks = [];
 
 //listener for Enter key. Used to add new task
 taskInput.addEventListener("keyup", (e) => {
@@ -30,6 +28,13 @@ function createTask(){
         alert("Due date cannot be in the past.");
     } 
     else {
+        let taskDetails = {
+            'task': taskInput.value,
+            'due_date': dateInput.value
+        }
+
+        localStorage.setItem('taskDetails', JSON.stringify(taskDetails));
+
         taskSection.innerHTML +=
         `<div class="task">
         <label id="taskname">
@@ -41,16 +46,14 @@ function createTask(){
         <i class="uil uil-trash"></i></div></div>
         `
 
-        listOfTasks.push({
-            'taskName': taskInput.value,
-            'taskdate': dueDate
-        })
 
         taskInput.value='';
         dateInput.value='';
 
-        console.log(listOfTasks);
+        let retrievedObject = localStorage.getItem('taskDetails');
+        console.log(retrievedObject)
     }
+
     var currentTasks = document.querySelectorAll(".delete");
     for (var i =0; i <currentTasks.length; i++){
         currentTasks[i].onclick = function() {
