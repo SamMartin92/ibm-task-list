@@ -20,7 +20,7 @@ document.querySelector('#push').onclick = function() {
 //display existing tasks in taskSection
 for (let i=0; i<localStorage.length; i++){
     taskSection.innerHTML +=
-        `<div class="task">
+        `<div  id ="taskObject${i}" class="task">
         <label id="taskname">
         <input onclick="updateTask(this)" type="checkbox" id="check-task">
         <p>${JSON.parse(localStorage.getItem(`taskObject${i}`)).task_name}</p>
@@ -28,11 +28,11 @@ for (let i=0; i<localStorage.length; i++){
         <span>Due: ${JSON.parse(localStorage.getItem(`taskObject${i}`)).task_date}</span>
         <div class="delete">
         <i class="uil uil-trash"></i></div></div>
-        `
-
-        console.log(JSON.parse(localStorage.getItem(`taskObject${i}`)));
-        
+        `        
 }
+
+addDeleteListeners()
+
 
 
 //function that creates task
@@ -43,6 +43,9 @@ function createTask(){
     if (taskInput.value.length == 0){
         alert("This field is blank. Enter a task name and try again");
     } 
+    else if (dateInput.value.length == 0){
+        alert("Please add due date")
+    }
     else if (dueDate< date.setHours(0,0,0)){
         alert("Due date cannot be in the past.");
     } 
@@ -73,20 +76,27 @@ function createTask(){
         taskInput.value='';
         dateInput.value='';
 
-        // let retrievedObject = localStorage.getItem('taskObject');
-        // console.log(retrievedObject)
     }
 
-    var currentTasks = document.querySelectorAll(".delete");
-    for (var i =0; i <currentTasks.length; i++){
-        currentTasks[i].onclick = function() {
-            this.parentNode.remove();
-        }
-    }
+    addDeleteListeners();
+
 
     taskSection.offsetHeight>=300
     ? taskSection.classList.add("overflow")
     : taskSection.classList.remove("overflow")
+}
+
+
+function addDeleteListeners(){
+    var currentTasks = document.querySelectorAll(".delete");
+    for (var i =0; i <currentTasks.length; i++){
+        currentTasks[i].onclick = function() {
+            let taskID = this.parentNode.attributes.id.value;
+            localStorage.removeItem(`${taskID}`);
+            this.parentNode.remove();
+        }
+    }
+    
 }
 
 function updateTask(task){
