@@ -9,39 +9,50 @@ let allTasks;
 taskInput.addEventListener("keyup", (e) => {
     if (e.key == "Enter" && dateInput.value != "") {
         createTask();
-    } 
+    }
 });
 
 //onClick event for add button
-document.querySelector('#push').onclick = function() {
+document.querySelector('#push').onclick = function () {
     createTask();
 }
 
-
-if (JSON.parse(localStorage.getItem('allTasks'))) {
-     allTasks = JSON.parse(localStorage.getItem('allTasks'))
-} else {
-     allTasks = []
+function showNotification(message) {
+    if (Notification.permission === "granted") {
+        new Notification(message);
+    } else if (Notification.permission !== "denied") {
+        Notification.requestPermission().then(permission => {
+            if (permission === "granted") {
+                new Notification(message);
+            }
+        });
+    }
 }
 
-console.log(allTasks);
-console.log(Array.isArray(allTasks));
+
+
+if (JSON.parse(localStorage.getItem('allTasks'))) {
+    allTasks = JSON.parse(localStorage.getItem('allTasks'))
+} else {
+    allTasks = []
+}
+
 
 
 // display existing tasks in taskSection
-for (let i=0; i<allTasks.length; i++){
+for (let i = 0; i < allTasks.length; i++) {
 
     taskSection.innerHTML +=
         `<div  id ="${allTasks[i].task_name.replace(/\s+/g, '')}" class="task">
         <label id="taskname">
         <input onclick="updateTask(this)" type="checkbox" id="check-task">
-        <p>${i} ${allTasks[i].task_name}</p>
+        <p>${allTasks[i].task_name}</p>
         </label>
         <span>Due: ${allTasks[i].task_date}</span>
         <div class="delete">
         <i class="uil uil-trash"></i></div></div>
-        `        
-    }
+        `
+}
 
 
 addDeleteListeners()
@@ -49,19 +60,19 @@ addDeleteListeners()
 
 
 //function that creates task
-function createTask(){
+function createTask() {
     const date = new Date();
     const dueDate = new Date(dateInput.value);
 
-    if (taskInput.value.length == 0){
+    if (taskInput.value.length == 0) {
         alert("This field is blank. Enter a task name and try again");
-    } 
-    else if (dateInput.value.length == 0){
+    }
+    else if (dateInput.value.length == 0) {
         alert("Please add due date")
     }
-    else if (dueDate< date.setHours(0,0,0)){
+    else if (dueDate < date.setHours(0, 0, 0)) {
         alert("Due date cannot be in the past.");
-    } 
+    }
     else {
 
 
@@ -71,13 +82,11 @@ function createTask(){
         }
 
         allTasks.push(taskObject);
+        localStorage.setItem(`allTasks`, JSON.stringify(allTasks));
 
-        localStorage.setItem(`allTasks`,JSON.stringify(allTasks));
-        console.log(localStorage)
-        
 
         taskSection.innerHTML +=
-        `<div class="task">
+            `<div class="task">
         <label id="taskname">
         <input onclick="updateTask(this)" type="checkbox" id="check-task">
         <p>${taskInput.value}</p>
@@ -87,36 +96,38 @@ function createTask(){
         <i class="uil uil-trash"></i></div></div>
         `
 
-
-        taskInput.value='';
-        dateInput.value='';
+        showNotification("This notification")
+        taskInput.value = '';
+        dateInput.value = '';
 
     }
 
     addDeleteListeners();
 
 
-    taskSection.offsetHeight>=300
-    ? taskSection.classList.add("overflow")
-    : taskSection.classList.remove("overflow")
+    taskSection.offsetHeight >= 300
+        ? taskSection.classList.add("overflow")
+        : taskSection.classList.remove("overflow")
 }
 
 
-function addDeleteListeners(){
+function addDeleteListeners() {
     var currentTasks = document.querySelectorAll(".delete");
-    for (var i =0; i <currentTasks.length; i++){
-        currentTasks[i].onclick = function() {
-        allTasks.splice(allTasks[i],1);
-        localStorage.setItem(`allTasks`,JSON.stringify(allTasks));
-    this.parentNode.remove();
+    for (var i = 0; i < currentTasks.length; i++) {
+        currentTasks[i].setAttribute("id", i);
+        currentTasks[i].onclick = function () {
+            var allTasksIndex = this.getAttribute('id');
+            allTasks.splice(allTasksIndex, 1);
+            localStorage.setItem(`allTasks`, JSON.stringify(allTasks));
+            this.parentNode.remove();
         }
     }
-    
+
 }
 
-function updateTask(task){
+function updateTask(task) {
     let taskItem = task.parentElement;
-    if (task.checked){
+    if (task.checked) {
         taskItem.classList.add("checked");
     } else {
         taskItem.classList.remove("checked");
