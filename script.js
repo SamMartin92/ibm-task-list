@@ -16,6 +16,25 @@ taskInput.addEventListener("keyup", (e) => {
 document.querySelector('#push').onclick = function() {
     createTask();
 }
+
+//display existing tasks in taskSection
+for (let i=0; i<localStorage.length; i++){
+    taskSection.innerHTML +=
+        `<div class="task">
+        <label id="taskname">
+        <input onclick="updateTask(this)" type="checkbox" id="check-task">
+        <p>${JSON.parse(localStorage.getItem(`taskObject${i}`)).task_name}</p>
+        </label>
+        <span>Due: ${JSON.parse(localStorage.getItem(`taskObject${i}`)).task_date}</span>
+        <div class="delete">
+        <i class="uil uil-trash"></i></div></div>
+        `
+
+        console.log(JSON.parse(localStorage.getItem(`taskObject${i}`)));
+        
+}
+
+
 //function that creates task
 function createTask(){
     const date = new Date();
@@ -28,12 +47,16 @@ function createTask(){
         alert("Due date cannot be in the past.");
     } 
     else {
-        let taskDetails = {
-            'task': taskInput.value,
-            'due_date': dateInput.value
+
+
+        let taskObject = {
+            'task_name': taskInput.value,
+            'task_date': dateInput.value
         }
 
-        localStorage.setItem('taskDetails', JSON.stringify(taskDetails));
+        localStorage.setItem(`${'taskObject'}${localStorage.length}`,JSON.stringify(taskObject));
+        console.log(localStorage)
+        
 
         taskSection.innerHTML +=
         `<div class="task">
@@ -50,8 +73,8 @@ function createTask(){
         taskInput.value='';
         dateInput.value='';
 
-        let retrievedObject = localStorage.getItem('taskDetails');
-        console.log(retrievedObject)
+        // let retrievedObject = localStorage.getItem('taskObject');
+        // console.log(retrievedObject)
     }
 
     var currentTasks = document.querySelectorAll(".delete");
