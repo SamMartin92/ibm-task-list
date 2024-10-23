@@ -3,7 +3,7 @@
 const taskInput = document.querySelector("#new-task-input");
 const dateInput = document.querySelector("#due-date");
 const taskSection = document.querySelector(".tasks");
-
+let allTasks;
 
 //listener for Enter key. Used to add new task
 taskInput.addEventListener("keyup", (e) => {
@@ -17,19 +17,32 @@ document.querySelector('#push').onclick = function() {
     createTask();
 }
 
-//display existing tasks in taskSection
-for (let i=0; i<localStorage.length; i++){
+
+if (JSON.parse(localStorage.getItem('allTasks'))) {
+     allTasks = JSON.parse(localStorage.getItem('allTasks'))
+} else {
+     allTasks = []
+}
+
+console.log(allTasks);
+console.log(Array.isArray(allTasks));
+
+
+// display existing tasks in taskSection
+for (let i=0; i<allTasks.length; i++){
+
     taskSection.innerHTML +=
-        `<div  id ="taskObject${i}" class="task">
+        `<div  id ="${allTasks[i].task_name.replace(/\s+/g, '')}" class="task">
         <label id="taskname">
         <input onclick="updateTask(this)" type="checkbox" id="check-task">
-        <p>${JSON.parse(localStorage.getItem(`taskObject${i}`)).task_name}</p>
+        <p>${i} ${allTasks[i].task_name}</p>
         </label>
-        <span>Due: ${JSON.parse(localStorage.getItem(`taskObject${i}`)).task_date}</span>
+        <span>Due: ${allTasks[i].task_date}</span>
         <div class="delete">
         <i class="uil uil-trash"></i></div></div>
         `        
-}
+    }
+
 
 addDeleteListeners()
 
@@ -57,7 +70,9 @@ function createTask(){
             'task_date': dateInput.value
         }
 
-        localStorage.setItem(`${'taskObject'}${localStorage.length}`,JSON.stringify(taskObject));
+        allTasks.push(taskObject);
+
+        localStorage.setItem(`allTasks`,JSON.stringify(allTasks));
         console.log(localStorage)
         
 
@@ -91,9 +106,9 @@ function addDeleteListeners(){
     var currentTasks = document.querySelectorAll(".delete");
     for (var i =0; i <currentTasks.length; i++){
         currentTasks[i].onclick = function() {
-            let taskID = this.parentNode.attributes.id.value;
-            localStorage.removeItem(`${taskID}`);
-            this.parentNode.remove();
+        allTasks.splice(allTasks[i],1);
+        localStorage.setItem(`allTasks`,JSON.stringify(allTasks));
+    this.parentNode.remove();
         }
     }
     
