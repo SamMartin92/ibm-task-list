@@ -11,12 +11,24 @@ body {
     background: #d46f39;
 }
 
+#head-container{
+    width: 100%; 
+    margin-left: 0px;
+    display: flex;
+    justify-content: center;
+}
+
 #head-text {
     margin-top: 50px;
     margin-left: 10px;
     font-family: sans-serif;
     color: #a3430f;
     text-align: center;
+    background-color: #ffffff;
+    text-align: -webkit-center;
+    padding: 5px;
+    border-radius: 5px;
+    border: solid 2px;
 }
 
 .container {
@@ -67,7 +79,7 @@ body {
     float: right;
     font-weight: 500;
     font-size: 16px;
-    background-color: #0f62fe;
+    background-color: #d46f39;
     border: none;
     color: #ffffff;
     cursor: pointer;
@@ -103,7 +115,7 @@ body {
 }
 
 .tasks::-webkit-scrollbar-thumb {
-    background: #0D75EC;
+    background: #d46f39;
     border-radius: 25px;
 }
 
@@ -123,14 +135,17 @@ body {
 .delete{
     right: -5px;
     padding: 5px 5px;
-    background: #ffffff;
     border-radius: 4px;
     transform-origin: top right;
     box-shadow: 0 0 6px rgba(0, 0, 0, 0.15);
     transition: transform 0.2s ease;
     z-index: 10;
-    width: 10%;
+    width: 100%;
+    background-color: #d46f39;
+    text-align: center;
+    color: #ffffff;
 }
+
 
 #check-task{
     margin-right: 20px;

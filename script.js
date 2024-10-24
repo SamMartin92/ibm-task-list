@@ -3,6 +3,7 @@
 const taskInput = document.querySelector("#new-task-input");
 const dateInput = document.querySelector("#due-date");
 const taskSection = document.querySelector(".tasks");
+
 let allTasks;
 
 //get today's date
@@ -23,6 +24,14 @@ document.querySelector('#push').onclick = function () {
     createTask();
 }
 
+
+if (JSON.parse(localStorage.getItem('allTasks'))) {
+    allTasks = JSON.parse(localStorage.getItem('allTasks'))
+} else {
+    allTasks = []
+}
+
+
 function showNotification(task) {
     const taskMessage = `${task.task_name.toUpperCase()} IS DUE TODAY!`;
 
@@ -38,42 +47,51 @@ function showNotification(task) {
 }
 
 
-
-if (JSON.parse(localStorage.getItem('allTasks'))) {
-    allTasks = JSON.parse(localStorage.getItem('allTasks'))
-} else {
-    allTasks = []
+function readCurrentTasks(){
+    return currentTasks = document.getElementsByClassName('task-p');
 }
 
 
 
-// display existing tasks in taskSection
-for (let i = 0; i < allTasks.length; i++) {
+function displayTaskManager(allTasks){
+    for (let i = 0; i < allTasks.length; i++) {
 
-    taskSection.innerHTML +=
-        `<div  id ="${allTasks[i].task_name.replace(/\s+/g, '')}" class="task">
-        <label class="task-name">
-        <input onclick="updateTask(this)" type="checkbox" id="check-task">
-        <p>${allTasks[i].task_name}</p>
-        </label>
-        <span class="class="due-date-span">Due: ${allTasks[i].task_date}</span>
-        <div class="delete">
-        <i class="uil uil-trash"></i></div></div>
-        `
+        taskSection.innerHTML +=
+            `<div  id ="${allTasks[i].task_name.replace(/\s+/g, '')}" class="task">
+            <label class="task-name">
+            <input onclick="updateTask(this)" type="checkbox" id="check-task">
+            <p class="task-p">${allTasks[i].task_name}</p>
+            </label>
+            <span class="class="due-date-span">Due: ${allTasks[i].task_date}</span>
+            <div class="delete">
+            <i class="uil uil-trash"></i></div></div>
+            `
+    }
+
+    displayScroll()
+    addDeleteListeners()
+    checkTaskDates()
 }
 
 
-addDeleteListeners()
-
-
+function getCurrentTasks(){
+    let currentTasks = Array.from(document.getElementsByClassName("task-p")).map(task =>
+        task.innerText.replaceAll(" ", "").toLowerCase())
+    return currentTasks
+}
 
 //function that creates task
 function createTask() {
     
     const dueDate = new Date(dateInput.value);
+    let currentTasks =getCurrentTasks()
+    console.log(currentTasks)
 
     if (taskInput.value.length == 0) {
         alert("This field is blank. Enter a task name and try again");
+    }
+    else if (currentTasks.includes(taskInput.value.replaceAll(" ","").toLowerCase())){
+        alert("Task already exists");
     }
     else if (dateInput.value.length == 0) {
         alert("Please add due date")
@@ -97,7 +115,7 @@ function createTask() {
             `<div class="task">
         <label class="task-name">
         <input onclick="updateTask(this)" type="checkbox" id="check-task">
-        <p>${taskInput.value}</p>
+        <p class="task-p">${taskInput.value}</p>
         </label>
         <span class="due-date-span">Due: ${dateInput.value}</span>
         <div class="delete">
@@ -109,10 +127,12 @@ function createTask() {
 
     }
 
-    addDeleteListeners();
+    addDeleteListeners();  
+    displayScroll();
+}
 
 
-
+function displayScroll(){
     taskSection.offsetHeight >= 300
         ? taskSection.classList.add("overflow")
         : taskSection.classList.remove("overflow")
@@ -153,4 +173,6 @@ function updateTask(task) {
     }
 }
 
-checkTaskDates()
+
+
+displayTaskManager(allTasks)
