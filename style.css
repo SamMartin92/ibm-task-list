@@ -8,14 +8,15 @@
 
 body {
     height: 100vh;
-    background: #0f62fe;
+    background: #d46f39;
 }
 
 #head-text {
     margin-top: 50px;
     margin-left: 10px;
     font-family: sans-serif;
-    color: #0f62fe;
+    color: #a3430f;
+    text-align: center;
 }
 
 .container {
@@ -45,7 +46,7 @@ body {
     border-radius: 5px;
     font-family: sans-serif;
     font-size: 15px;
-    border: 2px solid #3381ff;
+    border: 2px solid #d46f39;
 }
 
 #new-task-input{
@@ -58,7 +59,7 @@ body {
 
 #new-task input:focus {
     outline: none;
-    border-color: #0075ec;
+    border-color: #a3430f;
 }
 
 #new-task button {
@@ -81,7 +82,6 @@ body {
     position: absolute;
     border-radius: 0px;
     width: 100%;
-    /* position: relative; */
     background-color: #ffffff;
     padding: 30px 20px;
     margin-top: 0px;
@@ -110,14 +110,15 @@ body {
 .task{
     border-radius: 5px;
     align-items: center;
-    justify-content: space-between;
     cursor: pointer;
     height: 50px;
     margin-bottom: 8px;
     padding: 10px 10px;
-    display: flex;
-    width: 100%;
+    width: 100%;;
+    display: grid;
+    grid-template-columns: 45% 45% 10%;
 }
+
 
 .delete{
     right: -5px;
@@ -128,6 +129,7 @@ body {
     box-shadow: 0 0 6px rgba(0, 0, 0, 0.15);
     transition: transform 0.2s ease;
     z-index: 10;
+    width: 10%;
 }
 
 #check-task{
@@ -145,6 +147,7 @@ body {
 .task label input{
     margin-top: 3px;
 }
+
 
 .checked {
     text-decoration: line-through;

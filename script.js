@@ -9,8 +9,7 @@ let allTasks;
 const date = new Date();
 const dateToday = date.getFullYear()+"-"+parseInt(date.getMonth()+1)+"-"+date.getDate();
 
-console.log(dateToday);
-console.log("yo");
+
 
 //listener for Enter key. Used to add new task
 taskInput.addEventListener("keyup", (e) => {
@@ -24,13 +23,15 @@ document.querySelector('#push').onclick = function () {
     createTask();
 }
 
-function showNotification(message) {
+function showNotification(task) {
+    const taskMessage = `${task.task_name.toUpperCase()} IS DUE TODAY!`;
+
     if (Notification.permission === "granted") {
-        new Notification(message);
+        new Notification(taskMessage);
     } else if (Notification.permission !== "denied") {
         Notification.requestPermission().then(permission => {
             if (permission === "granted") {
-                new Notification(message);
+                new Notification(taskMessage);
             }
         });
     }
@@ -51,11 +52,11 @@ for (let i = 0; i < allTasks.length; i++) {
 
     taskSection.innerHTML +=
         `<div  id ="${allTasks[i].task_name.replace(/\s+/g, '')}" class="task">
-        <label id="taskname">
+        <label class="task-name">
         <input onclick="updateTask(this)" type="checkbox" id="check-task">
         <p>${allTasks[i].task_name}</p>
         </label>
-        <span>Due: ${allTasks[i].task_date}</span>
+        <span class="class="due-date-span">Due: ${allTasks[i].task_date}</span>
         <div class="delete">
         <i class="uil uil-trash"></i></div></div>
         `
@@ -68,7 +69,6 @@ addDeleteListeners()
 
 //function that creates task
 function createTask() {
-    
     
     const dueDate = new Date(dateInput.value);
 
@@ -95,16 +95,15 @@ function createTask() {
 
         taskSection.innerHTML +=
             `<div class="task">
-        <label id="taskname">
+        <label class="task-name">
         <input onclick="updateTask(this)" type="checkbox" id="check-task">
         <p>${taskInput.value}</p>
         </label>
-        <span>Due: ${dateInput.value}</span>
+        <span class="due-date-span">Due: ${dateInput.value}</span>
         <div class="delete">
         <i class="uil uil-trash"></i></div></div>
         `
 
-        showNotification("This notification")
         taskInput.value = '';
         dateInput.value = '';
 
@@ -134,6 +133,17 @@ function addDeleteListeners() {
 
 }
 
+function checkTaskDates(){
+    allTasks.forEach(task => {
+        if (task.task_date == dateToday) {
+            showNotification(task)
+        }
+    });
+}
+
+
+
+
 function updateTask(task) {
     let taskItem = task.parentElement;
     if (task.checked) {
@@ -142,3 +152,5 @@ function updateTask(task) {
         taskItem.classList.remove("checked");
     }
 }
+
+checkTaskDates()
