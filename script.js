@@ -5,6 +5,13 @@ const dateInput = document.querySelector("#due-date");
 const taskSection = document.querySelector(".tasks");
 let allTasks;
 
+//get today's date
+const date = new Date();
+const dateToday = date.getFullYear()+"-"+parseInt(date.getMonth()+1)+"-"+date.getDate();
+
+console.log(dateToday);
+console.log("yo");
+
 //listener for Enter key. Used to add new task
 taskInput.addEventListener("keyup", (e) => {
     if (e.key == "Enter" && dateInput.value != "") {
@@ -61,7 +68,8 @@ addDeleteListeners()
 
 //function that creates task
 function createTask() {
-    const date = new Date();
+    
+    
     const dueDate = new Date(dateInput.value);
 
     if (taskInput.value.length == 0) {
@@ -103,6 +111,7 @@ function createTask() {
     }
 
     addDeleteListeners();
+
 
 
     taskSection.offsetHeight >= 300
